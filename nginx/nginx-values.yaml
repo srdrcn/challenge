@@ -360,7 +360,13 @@ nodeSelector: {}
 ## Tolerations for pod assignment. Evaluated as a template.
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
-tolerations: []
+tolerations:
+ - key: "infra"
+   operator: "Equal"
+   value: "true"
+   effect: "NoSchedule"
+
+
 
 ## Extra volumes to add to the deployment
 ##
