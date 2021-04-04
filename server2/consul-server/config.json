@@ -21,9 +21,13 @@
 
     ],
     "ui": true,
-     "Service": {
-  "Address": "prometheus-server.devopstrend.com",
-  "ID": "prometheus-server",
-  "Name": "prometheus-server",
-  "Port": 80
+
+  "Service": {
+  "Address": "192.168.0.41",
+  "Name": "node-exporter",
+  "Port": 9100
  }
+
+
+
+}
