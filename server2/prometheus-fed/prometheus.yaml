@@ -26,6 +26,7 @@ scrape_configs:
     metrics_path: '/federate'
 
     params:
+      'match[]':
       - '{job="prometheus-server"}'
       - '{job="kubernetes-nodes"}'
       - '{job="kubernetes-apiservers"}'
