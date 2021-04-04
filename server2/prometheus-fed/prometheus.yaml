@@ -1,4 +1,4 @@
- # my global config
+# my global config
 global:
   scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
@@ -38,9 +38,14 @@ scrape_configs:
     static_configs:
       - targets:
         - 'prometheus-server.devopstrend.com'
-  - job_name: prometheus-server
+
+
+
+
+
+
+  - job_name: 'consul'
     scrape_interval: 15s
-    honor_labels: true
     consul_sd_configs:
-    - server: 192.168.0.42:8500
-      services: [prometheus-server]
+      - server: '192.168.0.42:8500'
+      - services: [node-exporter]
