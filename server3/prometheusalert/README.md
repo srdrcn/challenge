@@ -1,4 +1,4 @@
-#Getting Started
+# Getting Started
 
 Step 1: Update ip address of instances in inventory file.
 
