@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus-ingress
+  namespace: prometheus
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: prometheus-server.devopstrend.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: prometheus-server
+          servicePort: 80
