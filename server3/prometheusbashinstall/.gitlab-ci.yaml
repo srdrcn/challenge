@@ -1,0 +1,62 @@
+job:
+  script:
+    - |
+     systemctl stop prometheus
+     
+     echo "User Del"
+     userdel -f prometheus
+     
+     echo "User Add"
+     groupadd  --system prometheus
+     useradd -s /sbin/nologin -r -g prometheus prometheus
+     
+     echo "Get package"
+     yum install wget -y
+     wget https://github.com/prometheus/prometheus/releases/download/v$PROM_VER/prometheus-$PROM_VER.linux-amd64.tar.gz
+     tar -xvzf prometheus-$PROM_VER.linux-amd64.tar.gz
+     
+     echo "Directory Create"
+     mkdir -p /var/lib/prometheus
+     mkdir -p /etc/prometheus
+     
+     echo "Copy Binary"
+     /bin/cp -rf prometheus-$PROM_VER.linux-amd64/prometheus /usr/local/bin/
+     /bin/cp -rf prometheus-$PROM_VER.linux-amd64/promtool /usr/local/bin/
+     
+     echo "Copy Library"
+     /bin/cp -rf prometheus-$PROM_VER.linux-amd64/consoles  /etc/prometheus/
+     /bin/cp -rf prometheus-$PROM_VER.linux-amd64/console_libraries /etc/prometheus/
+     /bin/cp -rf prometheus-$PROM_VER.linux-amd64/prometheus.yml  /etc/prometheus/
+     
+     echo "Directory User Permisson" 
+     chown -R prometheus:prometheus /etc/prometheus/  /var/lib/prometheus/
+     chmod -R 775 /etc/prometheus/ /var/lib/prometheus/
+     
+     echo "Systemd Service Create"   
+     cat > /etc/systemd/system/prometheus.service << EOF
+     [Unit]
+     Description=Prometheus
+     Wants=network-online.target
+     After=network-online.target
+     [Service]
+     User=prometheus
+     Group=prometheus
+     Type=simple
+     ExecStart=/usr/local/bin/prometheus --config.file /etc/prometheus/prometheus.yml --storage.tsdb.path /var/lib/prometheus/ --web.console.templates=/etc/prometheus/consoles --web.console.libraries=/etc/prometheus/console_libraries                        
+     [Install]
+     WantedBy=multi-user.target
+     EOF
+     
+     echo "Prometheus Config Add"
+     /bin/cp -rf $GITLAB_PATH/prometheus.yml /etc/prometheus/
+     /bin/cp -rf $GITLAB_PATH/pod.rules.yml /etc/prometheus/
+     systemctl daemon-reload
+     systemctl start prometheus
+     systemctl enable prometheus
+     systemctl status prometheus
+     systemctl daemon-reload
+     
+     echo "Start Prometheus"
+     systemctl restart prometheus
+     
+     
