@@ -1,0 +1,5 @@
+job:
+  script:
+    - ansible --version
+    - cd /home/gitlab-runner/builds/Ky1iETJu/0/root/prometheus-ansible-install
+    - ansible-playbook playbook.yml
