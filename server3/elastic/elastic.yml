@@ -54,6 +54,7 @@ path.logs: /var/log/elasticsearch
 # address here to expose this node on the network:
 #
 network.host: 192.168.0.40
+
 #
 # By default Elasticsearch listens for HTTP traffic on the first free port it
 # finds starting at 9200. Set a specific HTTP port here:
@@ -67,7 +68,9 @@ http.port: 9200
 # Pass an initial list of hosts to perform discovery when this node is started:
 # The default list of hosts is ["127.0.0.1", "[::1]"]
 #
-discovery.seed_hosts: ["host1", "host2"]
+#discovery.seed_hosts: ["host1", "host2"]
+discovery.type: single-node
+
 #
 # Bootstrap the cluster using an initial set of master-eligible nodes:
 #
