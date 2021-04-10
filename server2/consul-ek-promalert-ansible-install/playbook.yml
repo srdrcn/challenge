@@ -1,0 +1,28 @@
+---
+- hosts: consul
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - consul
+
+- hosts: grafana
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - grafana
+
+- hosts: alertmanager
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - alertmanager
+
+- hosts: prometheus
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - prometheus

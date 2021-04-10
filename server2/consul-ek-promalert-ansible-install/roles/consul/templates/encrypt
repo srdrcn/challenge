@@ -1,0 +1,1 @@
+consul_keygen: {{ consul_keygen.stdout_lines[0] }}
