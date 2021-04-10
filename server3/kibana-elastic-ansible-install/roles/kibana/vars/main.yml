@@ -1,0 +1,7 @@
+---
+serviceName: "kibana"
+userId: "kibana"
+groupId: "kibana"
+elastichost: "http://167.99.136.157:9200"
+kibana_url: "http://167.99.136.157:5601"
+

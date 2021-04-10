@@ -1,0 +1,67 @@
+- name: Creating Elastic User Group
+  group: name="{{groupId}}"
+  become: true
+
+- name: Creating Elastic User
+  user:
+    name: "{{userId}}"
+    group: "{{groupId}}"
+    system: yes
+    shell: "/sbin/nologin"
+    comment: "{{userId}} nologin User"
+    createhome: "no"
+    state: present
+
+- name: Download JDK 1.8
+  yum:
+    name: 
+      - java-1.8.0-openjdk
+      - java-1.8.0-openjdk-devel
+
+- name: Add GPG Key
+  rpm_key:
+    key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    state: present
+  become: true
+
+
+- name: Copy Elastic Repo file
+  template:
+    src: elasticsearch.repo
+    dest: /etc/yum.repos.d/
+
+      
+- name: Install ElasticSearch 
+  yum: 
+    name: 
+      - elasticsearch
+         
+- name: Copy ElasticSearch JVM File
+  copy:
+    src: "{{ role_path }}/files/jvm.options"
+    dest: /etc/elasticsearch/jvm.options
+
+
+- name: Copy ElasticSearch.yml File
+  template:
+    src: elasticsearch.yml
+    dest: /etc/elasticsearch/elasticsearch.yml
+
+
+- name: Enabled ElasticSearch Service
+  systemd:
+    name: elasticsearch.service
+    enabled: yes
+    masked: no
+
+
+- name: Restart ElasticSearch Service 
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: elasticsearch.service
+
+
+   
+
+

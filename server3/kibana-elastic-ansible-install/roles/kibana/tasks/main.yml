@@ -1,0 +1,43 @@
+- name: Creating Kibana User Group
+  group: name="{{groupId}}"
+  become: true
+
+- name: Creating Kibana User
+  user:
+    name: "{{userId}}"
+    group: "{{groupId}}"
+    system: yes
+    shell: "/sbin/nologin"
+    comment: "{{userId}} nologin User"
+    createhome: "no"
+    state: present
+
+- name: Installing Kibana
+  yum:
+    name: 
+      - kibana
+
+- name: Copy Kibana.yml File
+  template:
+    src: kibana.yml
+    dest: /etc/kibana/kibana.yml
+
+
+- name: Enabled Kibana Service
+  systemd:
+    name: kibana
+    enabled: yes
+    masked: no
+
+
+- name: Restart Kibana Service 
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: kibana
+
+
+
+
+
+
