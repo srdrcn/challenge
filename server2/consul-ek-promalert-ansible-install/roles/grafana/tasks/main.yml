@@ -1,0 +1,45 @@
+- name: Creating Grafana User Group
+  group: name="{{groupId}}"
+  become: true
+
+- name: Creating Grafana User
+  user:
+    name: "{{userId}}"
+    group: "{{groupId}}"
+    system: yes
+    shell: "/sbin/nologin"
+    comment: "{{userId}} nologin User"
+    createhome: "no"
+    state: present
+
+- name: Copy Grafana Repo file
+  template:
+    src: grafana.repo
+    dest: /etc/yum.repos.d/
+
+
+- name: Installing Grafana
+  yum:
+    name: 
+      - grafana
+
+
+
+
+- name: Enabled Grafana Service
+  systemd:
+    name: grafana-server
+    enabled: yes
+    masked: no
+
+
+- name: Restart Grafana Service 
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: grafana-server
+
+
+   
+
+

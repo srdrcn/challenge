@@ -1,0 +1,68 @@
+- name: Creating Consul User Group
+  group: name="{{groupId}}"
+  become: true
+
+- name: Creating Consul User
+  user:
+    name: "{{userId}}"
+    group: "{{groupId}}"
+    system: yes
+    shell: "/sbin/nologin"
+    comment: "{{userId}} nologin User"
+    createhome: "no"
+    state: present
+
+- name: Installing yum-utils
+  yum:
+    name: 
+      - yum-utils
+
+- name: Installing yum-config-manager
+  shell:  yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+
+- name: Installing Consul
+  yum:
+    name: 
+      - consul
+
+- name: Generate Consul Encrypt Key
+  shell: consul keygen
+  register:  encrypt
+
+- name: Copy Consul.hcl File
+  template:
+    src: consul.hcl
+    dest:  /etc/consul.d/consul.hcl
+
+- name: Copy Server.hcl File
+  template:
+    src: server.hcl
+    dest:  /etc/consul.d/server.hcl 
+
+- name: Rewrite Consul Encrypt
+  vars:
+    encrypt: "{{ encrypt.stdout_lines[0] }}"
+  template:
+    src:  templates/consul.hcl
+    dest: /etc/consul.d/consul.hcl
+
+
+- name: Enabled Consul Service
+  systemd:
+    name: consul
+    enabled: yes
+    masked: no
+
+
+- name: Restart Consul Service 
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: consul
+
+
+
+
+
+
+
