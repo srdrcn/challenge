@@ -1,0 +1,15 @@
+---
+- hosts: elastic
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - elastic
+
+- hosts: kibana
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - kibana
+
